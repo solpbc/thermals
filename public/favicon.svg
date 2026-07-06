@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="thermals.cloud">
+  <title>thermals.cloud</title>
+  <!-- favicon: ink tile (#15171C) with the gold sun-glint (#F0B43C) — thermals
+       is type-led with no standalone mark (cmo/brand/rooks/index.md); the disc
+       is the rooks family sun-nod (the sun that raises the thermal), not a
+       pictorial mark. -->
+  <rect width="512" height="512" rx="56" fill="#15171C"/>
+  <circle cx="256" cy="256" r="120" fill="#F0B43C"/>
+</svg>
