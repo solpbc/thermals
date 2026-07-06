@@ -1,0 +1,15 @@
+{
+  "name": "thermals-appview",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "thermals.cloud appview backend — indexer, reputation, request list, atproto OAuth posting",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node --test test/*.test.js"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  }
+}

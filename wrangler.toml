@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+name = "thermals-appview"
+main = "src/index.js"
+compatibility_date = "2024-12-01"
+account_id = "3f2c1528c7d4d9685819ea9e9e307c92"
+
+# VPX 2.c renders the read/post surfaces; its built assets live in public/ and
+# call the /api/* endpoints this worker serves. run_worker_first so /api and
+# /oauth reach the worker before static asset resolution.
+[assets]
+directory = "public"
+binding = "ASSETS"
+run_worker_first = ["/api/*", "/oauth/*", "/client-metadata.json", "/jwks.json"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "thermals-appview"
+database_id = "PLACEHOLDER_SET_ON_PROVISION"
+
+[durable_objects]
+bindings = [
+  { name = "CURSOR_STORE", class_name = "CursorStore" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["CursorStore"]
+
+# Indexer cron: Jetstream tail + commons poll every minute.
+[triggers]
+crons = ["*/1 * * * *"]
+
+# Origin swap: claims the thermals.cloud apex + www, replacing the extro-sites
+# holding worker. Coordinated with CTO (a route is exclusive to one worker).
+[[routes]]
+pattern = "thermals.cloud"
+custom_domain = true
+
+[[routes]]
+pattern = "www.thermals.cloud"
+custom_domain = true
+
+[vars]
+# rook.host commons — polled directly (relay-independent coverage) + its records
+# also flow via Jetstream if bsky.network crawls it.
+COMMONS_HOST = "rook.host"
+JETSTREAM_URL = "wss://jetstream2.us-east.bsky.network/subscribe"
+# OAuth client identity (public client-metadata document served at /client-metadata.json).
+OAUTH_CLIENT_URI = "https://thermals.cloud"
+# SESSION_SECRET (session encryption key) is set as a secret, not here:
+#   wrangler secret put SESSION_SECRET
