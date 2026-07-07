@@ -9,17 +9,26 @@
 //   coder axis    = caps shipped (kind != 'request') + endorse-vouches RECEIVED on them
 //   reviewer axis = endorse-vouches GIVEN (vouching is reputation staking)
 
-// Leaderboard membership is opt-in: a rook appears by publishing a
-// cloud.thermals.actor.profile record. Works identically for commons + self-hosted.
-const AXIS_COLUMNS = `
+export function shippedCapPredicate(alias) {
+  return `(${alias}.kind IS NULL OR ${alias}.kind != 'request')`;
+}
+
+function axisCountColumns(didExpr) {
+  const shipped = shippedCapPredicate('c');
+  return `
   (SELECT COUNT(*) FROM caps c
-     WHERE c.did = p.did AND (c.kind IS NULL OR c.kind != 'request')) AS caps_shipped,
+     WHERE c.did = ${didExpr} AND ${shipped}) AS caps_shipped,
   (SELECT COUNT(*) FROM vouches v
      WHERE v.kind = 'endorse' AND v.cap_uri IN
-       (SELECT uri FROM caps c WHERE c.did = p.did AND (c.kind IS NULL OR c.kind != 'request'))
+       (SELECT uri FROM caps c WHERE c.did = ${didExpr} AND ${shipped})
   ) AS endorsements_received,
   (SELECT COUNT(*) FROM vouches v
-     WHERE v.did = p.did AND v.kind = 'endorse') AS vouches_given,
+     WHERE v.did = ${didExpr} AND v.kind = 'endorse') AS vouches_given`;
+}
+
+// Leaderboard membership is opt-in: a rook appears by publishing a
+// cloud.thermals.actor.profile record. Works identically for commons + self-hosted.
+const AXIS_COLUMNS = `${axisCountColumns('p.did')},
   (SELECT MAX(ts) FROM (
      SELECT created_at AS ts FROM caps WHERE did = p.did
      UNION ALL SELECT created_at FROM vouches WHERE did = p.did
@@ -51,6 +60,15 @@ export async function rookByDid(env, did) {
     WHERE p.did = ?`;
   const row = await env.DB.prepare(sql).bind(did).first();
   return row ? shapeRook(row) : null;
+}
+
+export async function axisCounts(env, did) {
+  const row = await env.DB.prepare(`SELECT ${axisCountColumns('?')}`).bind(did, did, did).first();
+  return {
+    capsShipped: row?.caps_shipped ?? 0,
+    endorsementsReceived: row?.endorsements_received ?? 0,
+    vouchesGiven: row?.vouches_given ?? 0,
+  };
 }
 
 function shapeRook(row) {

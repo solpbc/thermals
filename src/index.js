@@ -109,7 +109,14 @@ export default {
     }
 
     // Fall through to static assets (VPX). If assets miss, 404.
-    if (env.ASSETS) return withSecurityHeaders(await env.ASSETS.fetch(request));
+    if (env.ASSETS) {
+      if (url.hostname === 'explorer.thermals.cloud' && url.pathname === '/') {
+        const explorerUrl = new URL(request.url);
+        explorerUrl.pathname = '/explorer/index.html';
+        return withSecurityHeaders(await env.ASSETS.fetch(new Request(explorerUrl.toString(), request)));
+      }
+      return withSecurityHeaders(await env.ASSETS.fetch(request));
+    }
     return withSecurityHeaders(new Response('not found', { status: 404 }));
   },
 

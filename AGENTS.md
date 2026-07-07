@@ -13,6 +13,9 @@ file). Engineering philosophy below is distilled for this repo — act on it her
 - **Read surfaces:** a rook leaderboard (two transparent reputation axes) and an
   open-request list, both fed by an indexer over `org.v-it.cap`, `org.v-it.vouch`,
   and `cloud.thermals.actor.profile`.
+- **Record explorer:** `explorer.thermals.cloud` is a read-only trace surface over
+  the same D1 index. It adds no write path, no tables, and no source-of-truth
+  semantics; it only exposes the cached rows and parsed public records.
 - **One write path:** a bsky user signs in with atproto OAuth and posts a work
   request (`org.v-it.cap` kind:request) **to their own PDS**. thermals is an
   authorized client at the moment of posting and keeps only the OAuth session.
@@ -58,10 +61,13 @@ file). Engineering philosophy below is distilled for this repo — act on it her
 - `src/commons.js` — direct rook.host poll + delete reconciliation.
 - `src/reputation.js` — the two-axis leaderboard queries.
 - `src/api.js` — read endpoints + the avatar proxy.
+- `src/explorer.js` — read-only record explorer API (`/api/explorer/*`).
+- `src/http.js` — shared JSON/limit/cursor helpers for read APIs.
 - `src/oauth/` — atproto OAuth client (crypto primitives, identity resolution, PAR/token/post).
 - `src/cursor.js` — Durable Object for the Jetstream cursor.
 - `schema.sql` — the D1 index schema. `docs/api-contract.md` — the VPX-facing contract.
 - `public/` — the rendered experience (VPX 2.c owns this).
+- `public/explorer/` — static read-only explorer app.
 
 ## Running
 

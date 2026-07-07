@@ -40,6 +40,10 @@ pattern = "thermals.cloud"
 custom_domain = true
 
 [[routes]]
+pattern = "explorer.thermals.cloud"
+custom_domain = true
+
+[[routes]]
 pattern = "www.thermals.cloud"
 custom_domain = true
 

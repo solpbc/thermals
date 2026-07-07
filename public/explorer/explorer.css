@@ -1,0 +1,218 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Copyright (c) 2026 sol pbc */
+
+.explorer-masthead .wordmark {
+  letter-spacing: 0;
+}
+
+.explorer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.summary-tile,
+.record-row,
+.detail-panel,
+.filter-bar {
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+}
+
+.summary-tile {
+  display: block;
+  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.summary-tile:hover,
+.record-row:hover {
+  background: var(--chalk);
+}
+
+.summary-tile .n {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.summary-tile .k,
+.meta-line,
+.field-name,
+.filter-bar label,
+.trace-count {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--ink-faint);
+}
+
+.summary-tile .fresh {
+  display: block;
+  margin-top: 0.55rem;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.filter-bar {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) minmax(10rem, 0.8fr) auto;
+  gap: 0.7rem;
+  align-items: end;
+  padding: 0.9rem;
+  margin: 1rem 0;
+}
+
+.filter-bar label {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.filter-bar input,
+.filter-bar select {
+  width: 100%;
+  font: inherit;
+  color: var(--ink);
+  background: var(--chalk);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  padding: 0.55rem 0.6rem;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.record-list {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+}
+
+.record-row {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem 0.95rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.record-title {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  font-weight: 700;
+}
+
+.record-title a,
+.context-list a,
+.actor-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.record-title a:hover,
+.context-list a:hover,
+.actor-link:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--glint);
+  text-underline-offset: 3px;
+}
+
+.uri-line {
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+}
+
+.detail-panel {
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.25fr) 1fr;
+  gap: 0.4rem 0.9rem;
+}
+
+.field-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--ink-soft);
+}
+
+.raw-json {
+  margin: 0.75rem 0 0;
+  overflow: auto;
+  max-height: 32rem;
+  padding: 0.85rem;
+  background: var(--ink);
+  color: var(--chalk);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.context-list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.75rem 0 0;
+}
+
+.trace-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.trace-axis {
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 0.85rem;
+  background: var(--chalk);
+}
+
+.trace-axis .n {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.trace-section {
+  margin-top: 1.5rem;
+}
+
+.trace-section h2 {
+  margin: 0 0 0.55rem;
+  font-size: 1.05rem;
+}
+
+.load-more {
+  margin-top: 1rem;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 660px) {
+  .filter-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

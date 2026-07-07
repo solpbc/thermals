@@ -63,6 +63,40 @@ avatar; `kind=bsky` (default) = the requester's public bsky profile avatar.
 ### `GET /api/stats`
 `{ rooks, caps_shipped, open_requests, vouches }` — counts for the header.
 
+### `GET /api/explorer/summary`
+Read-only explorer summary. Returns count plus latest indexed timestamp for the
+four browsable populations:
+```json
+{
+  "capsShipped": { "count": 12, "latestIndexedAt": "2026-07-06 12:00:00" },
+  "requests": { "count": 3, "latestIndexedAt": "2026-07-06 12:00:00" },
+  "vouches": { "count": 30, "latestIndexedAt": "2026-07-06 12:00:00" },
+  "profiles": { "count": 5, "latestIndexedAt": "2026-07-06 12:00:00" }
+}
+```
+
+### `GET /api/explorer/records?collection=&did=&kind=&limit=&cursor=`
+Browses one indexed collection. `collection` must be one of
+`org.v-it.cap`, `org.v-it.vouch`, or `cloud.thermals.actor.profile`. `did`
+filters by author DID; `kind` filters caps/vouches only. Returns:
+```json
+{ "records": [ { "uri": "at://…", "did": "did:plc:…", "value": { } } ], "cursor": "…" }
+```
+The cursor is opaque. Caps/vouches page by integer row id; profiles page by
+`indexed_at,did` so rows tied in the same second are not skipped.
+
+### `GET /api/explorer/record?uri=at://…`
+Looks up one cap, vouch, or thermals profile by URI. Returns
+`{ collection, record, context }`; `record.value` is parsed `record_json`.
+Context is the cap's indexed vouches, the vouch's indexed subject cap when
+present, or the profile handle. Unknown URI returns 404.
+
+### `GET /api/explorer/actor?did=…` (or `?handle=…`)
+Trace view for one actor. Uses only indexed data and the handle cache; no network
+resolution. Returns nullable `profile`, transparent axis `counts`, and three
+record lists whose lengths match those counts by construction:
+`capsShipped`, `endorsementsReceived`, and `vouchesGiven`.
+
 ## Write path (SSO — the single write surface in v1)
 
 ### `GET /oauth/session`

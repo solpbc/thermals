@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content='width=device-width, initial-scale=1'>
+  <title>explorer.thermals.cloud</title>
+  <meta name="description" content='read-only explorer for thermals.cloud indexed atproto records.'>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/explorer/explorer.css">
+  <meta name="theme-color" content='#15171C'>
+</head>
+<body>
+  <header class="masthead explorer-masthead">
+    <div class="masthead-inner">
+      <div class="brand-row">
+        <a class="wordmark" href="/explorer/#/" aria-label="explorer home">explorer<span class="dot">.</span>thermals</a>
+        <p class="eyebrow">records, not ownership</p>
+      </div>
+      <nav class="nav" aria-label="primary">
+        <a href="/explorer/#/" data-nav="home">summary</a>
+        <a href="/explorer/#/records/org.v-it.cap" data-nav="caps">caps</a>
+        <a href="/explorer/#/records/org.v-it.vouch" data-nav="vouches">vouches</a>
+        <a href="/explorer/#/records/cloud.thermals.actor.profile" data-nav="profiles">profiles</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="view" aria-live="polite"></main>
+
+  <footer class="trust">
+    <a href="/">thermals.cloud</a>
+    <span class="sep" aria-hidden="true">.</span>
+    <span>read-only index trace</span>
+    <span class="sep" aria-hidden="true">.</span>
+    <a href="/explorer/#/">explorer home</a>
+  </footer>
+
+  <script src="/explorer/app.js"></script>
+</body>
+</html>

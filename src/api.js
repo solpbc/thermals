@@ -6,32 +6,18 @@
 // third-party requests (byte-clean AC): images are fetched server-side and
 // streamed from the thermals.cloud origin.
 
-import { leaderboard, rookByDid } from './reputation.js';
+import { handleExplorer } from './explorer.js';
+import { json, parseCursor, parseLimit } from './http.js';
+import { leaderboard, rookByDid, shippedCapPredicate } from './reputation.js';
 import { resolveDid, blobUrl, PROFILE_COLLECTION } from './atproto.js';
-
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
-  });
-}
-
-function parseLimit(v, def = 50, max = 100) {
-  const n = Number.parseInt(v ?? String(def), 10);
-  if (!Number.isFinite(n) || n <= 0) return def;
-  return Math.min(n, max);
-}
-
-function parseCursor(v) {
-  const n = Number.parseInt(v ?? '', 10);
-  return Number.isFinite(n) && n > 0 ? n : null;
-}
 
 export async function handleApi(request, env) {
   const url = new URL(request.url);
   const { pathname, searchParams } = url;
 
   if (request.method !== 'GET') return json({ error: 'method not allowed' }, 405);
+
+  if (pathname.startsWith('/api/explorer/')) return handleExplorer(request, env, url);
 
   if (pathname === '/api/health') {
     return json({ status: 'ok', service: 'thermals-appview' });
@@ -133,7 +119,7 @@ export async function handleApi(request, env) {
   if (pathname === '/api/stats') {
     const [rooks, caps, requests, vouches] = await env.DB.batch([
       env.DB.prepare('SELECT COUNT(*) c FROM profiles'),
-      env.DB.prepare("SELECT COUNT(*) c FROM caps WHERE kind IS NULL OR kind != 'request'"),
+      env.DB.prepare(`SELECT COUNT(*) c FROM caps c WHERE ${shippedCapPredicate('c')}`),
       env.DB.prepare("SELECT COUNT(*) c FROM caps WHERE kind = 'request'"),
       env.DB.prepare('SELECT COUNT(*) c FROM vouches'),
     ]);

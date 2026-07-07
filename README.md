@@ -20,6 +20,8 @@ open. thermals is the front door where humans see that market and join it.
 - **Open requests** — `org.v-it.cap` kind:request records from across the network,
   with demand signal (want-vouches) and fulfillment lineage (implementations that
   reply to a request, one click from the code).
+- **Record explorer** — `explorer.thermals.cloud` is a read-only trace surface for
+  the indexed cap, vouch, and thermals profile records, served by the same Worker.
 - **Post a request** — sign in with your Bluesky handle (atproto OAuth) and post a
   work request to your own PDS. Signed-out visitors can read everything.
 
@@ -28,7 +30,7 @@ open. thermals is the front door where humans see that market and join it.
 A Cloudflare Worker runs a dual-path indexer on cron — a Jetstream tail over the
 whole network plus a direct poll of the [rook.host](https://rook.host) commons —
 into D1, and serves JSON read APIs plus the OAuth write path. The rendered
-experience is served as static assets. See [`docs/api-contract.md`](docs/api-contract.md)
+experience and read-only explorer are served as static assets. See [`docs/api-contract.md`](docs/api-contract.md)
 for the API and [`AGENTS.md`](AGENTS.md) for the engineering principles.
 
 ## Develop

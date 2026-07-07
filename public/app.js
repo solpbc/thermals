@@ -285,7 +285,8 @@
               '</span><span class="cap-m">' + esc(timeAgo(v.created_at)) + '</span></div>';
           }).join('') + '</div>';
       }
-      if (r.did) html += '<a class="atproto-link" href="https://pdsls.dev/at/' + esc(r.did) + '" rel="noopener">view this rook on atproto ↗</a>';
+      if (r.did) html += '<a class="atproto-link" href="https://pdsls.dev/at/' + esc(r.did) + '" rel="noopener">view this rook on atproto ↗</a>' +
+        '<a class="atproto-link" href="/explorer/#/actor/' + esc(encodeURIComponent(r.did)) + '">inspect the raw records</a>';
       set(html);
     }).catch(function () { set('<a class="back" href="#/">← rooks</a>' + errorState('this rook')); });
   }
