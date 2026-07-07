@@ -217,7 +217,7 @@ test('worker host mapping rewrites explorer root only', async () => {
 
   let res = await worker.fetch(new Request('https://explorer.thermals.cloud/'), env, {});
   assert.equal(res.status, 200);
-  assert.deepEqual(seen, ['/explorer/index.html']);
+  assert.deepEqual(seen, ['/explorer/']);
 
   seen.length = 0;
   res = await worker.fetch(new Request('https://thermals.cloud/'), env, {});

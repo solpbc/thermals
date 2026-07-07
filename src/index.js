@@ -111,8 +111,11 @@ export default {
     // Fall through to static assets (VPX). If assets miss, 404.
     if (env.ASSETS) {
       if (url.hostname === 'explorer.thermals.cloud' && url.pathname === '/') {
+        // Rewrite to the directory path, not /explorer/index.html — the asset
+        // layer's html_handling 307-redirects explicit index.html back to the
+        // directory, which would bounce the visitor through an extra hop.
         const explorerUrl = new URL(request.url);
-        explorerUrl.pathname = '/explorer/index.html';
+        explorerUrl.pathname = '/explorer/';
         return withSecurityHeaders(await env.ASSETS.fetch(new Request(explorerUrl.toString(), request)));
       }
       return withSecurityHeaders(await env.ASSETS.fetch(request));
