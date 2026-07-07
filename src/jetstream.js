@@ -20,6 +20,11 @@ export async function streamEvents(env, cursor) {
 
   return await new Promise((resolve) => {
     let latestCursor = cursor || null;
+    // With wantedCollections filtering, matching events are rare — most windows
+    // see none and latestCursor would never advance. Fall back to the window's
+    // open time so the next window resumes from here (replaying this window is
+    // harmless: upsert/delete by URI are idempotent).
+    const openCursor = String(Date.now() * 1000);
     const newDids = new Set();
     const pending = new Set();
     const ws = new WebSocket(url.toString());
@@ -30,7 +35,8 @@ export async function streamEvents(env, cursor) {
       clearTimeout(timeout);
       if (pending.size > 0) await Promise.allSettled([...pending]);
       if (newDids.size > 0) await resolveDids([...newDids], env);
-      resolve({ latestCursor });
+      const next = latestCursor && latestCursor !== cursor ? latestCursor : openCursor;
+      resolve({ latestCursor: next });
     };
 
     ws.addEventListener('message', (event) => {

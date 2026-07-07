@@ -47,7 +47,11 @@ custom_domain = true
 # rook.host commons — polled directly (relay-independent coverage) + its records
 # also flow via Jetstream if bsky.network crawls it.
 COMMONS_HOST = "rook.host"
-JETSTREAM_URL = "wss://jetstream2.us-east.bsky.network/subscribe"
+# jetstream1, not jetstream2: on 2026-07-07 jetstream2.us-east emitted
+# account/identity events but silently dropped org.v-it.cap commits that
+# jetstream1 delivered for the same cursor (relay had the commits; revs
+# matched the PDS). If the tail goes quiet, probe the other instance first.
+JETSTREAM_URL = "wss://jetstream1.us-east.bsky.network/subscribe"
 # OAuth client identity (public client-metadata document served at /client-metadata.json).
 OAUTH_CLIENT_URI = "https://thermals.cloud"
 # SESSION_SECRET (session encryption key) is set as a secret, not here:

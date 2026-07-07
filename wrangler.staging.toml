@@ -33,5 +33,5 @@ crons = ["*/1 * * * *"]
 
 [vars]
 COMMONS_HOST = "rook.host"
-JETSTREAM_URL = "wss://jetstream2.us-east.bsky.network/subscribe"
+JETSTREAM_URL = "wss://jetstream1.us-east.bsky.network/subscribe"
 OAUTH_CLIENT_URI = "https://thermals-appview-staging.jer-3f2.workers.dev"

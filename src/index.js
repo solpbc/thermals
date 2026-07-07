@@ -60,7 +60,23 @@ function withSecurityHeaders(response) {
 async function runIndexer(env) {
   // Commons poll first (bounded, relay-independent), then the network tail.
   const commons = await pollCommons(env).catch((e) => ({ error: String(e) }));
-  const stream = await streamEvents(env, null).catch((e) => ({ error: String(e) }));
+
+  // Resume the Jetstream tail from the persisted cursor so events landing in
+  // the gap between cron windows are replayed, not lost — without this, a
+  // delete (or an off-flow post) emitted while no tail is connected would
+  // never reach the index. Records are idempotent, so replay overlap is safe.
+  const cursorStub = env.CURSOR_STORE.get(env.CURSOR_STORE.idFromName('jetstream'));
+  let cursor = null;
+  try {
+    cursor = (await (await cursorStub.fetch('https://cursor/', { method: 'GET' })).text()) || null;
+  } catch { /* first run or DO hiccup — tail from the live tip */ }
+
+  const stream = await streamEvents(env, cursor).catch((e) => ({ error: String(e) }));
+  if (stream?.latestCursor) {
+    try {
+      await cursorStub.fetch('https://cursor/', { method: 'PUT', body: stream.latestCursor });
+    } catch { /* next window replays from the previous cursor — idempotent */ }
+  }
   return { commons, stream };
 }
 
