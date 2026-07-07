@@ -15,7 +15,7 @@ run_worker_first = ["/api/*", "/oauth/*", "/client-metadata.json", "/jwks.json"]
 [[d1_databases]]
 binding = "DB"
 database_name = "thermals-appview"
-database_id = "PLACEHOLDER_SET_ON_PROVISION"
+database_id = "19bd234d-5418-4cda-ac50-8a1af49999e7"
 
 [durable_objects]
 bindings = [

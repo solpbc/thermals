@@ -15,6 +15,8 @@ import {
   dpopProof, randomToken, encryptJson, decryptJson,
 } from './crypto.js';
 import { resolveHandleToDid, resolvePds, resolveAuthServer } from './identity.js';
+import { upsertCap } from '../store.js';
+import { resolveDid } from '../atproto.js';
 
 const SCOPE = 'atproto transition:generic';
 const SESSION_COOKIE = 'thermals_sid';
@@ -224,8 +226,16 @@ async function post(request, env) {
 
   if (!res.ok) return json({ error: 'post failed', detail: await res.text() }, 502);
   const created = await res.json();
-  // thermals keeps NO copy — the record lives in the user's PDS; the indexer
-  // will pick it up from the network on its next cycle.
+
+  // Index the just-created request immediately. This is not "retaining a copy
+  // as origin" — the record's origin is the user's PDS; this is the same
+  // disposable cache the indexer maintains, populated from the public record we
+  // just observed. It makes SSO-posted requests appear without waiting on
+  // jetstream propagation (which lags for custom collections). The indexer's
+  // delete-reconcile still governs: delete it at your PDS and it disappears here.
+  await resolveDid(s.did, env);
+  await upsertCap(env, s.did, created.uri, created.cid, record).catch(() => {});
+
   return json({ ok: true, uri: created.uri, ref: record.ref });
 }
 
