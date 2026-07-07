@@ -5,12 +5,15 @@ compatibility_date = "2024-12-01"
 account_id = "3f2c1528c7d4d9685819ea9e9e307c92"
 
 # VPX 2.c renders the read/post surfaces; its built assets live in public/ and
-# call the /api/* endpoints this worker serves. run_worker_first so /api and
-# /oauth reach the worker before static asset resolution.
+# call the /api/* endpoints this worker serves. run_worker_first = true so EVERY
+# response (including HTML assets) passes through the worker and carries the
+# byte-clean security headers + Cache-Control: no-transform — with a path list,
+# asset hits are served by the edge asset layer directly and Cloudflare's
+# Web-Analytics beacon injection would reach the live zone's HTML untouched.
 [assets]
 directory = "public"
 binding = "ASSETS"
-run_worker_first = ["/api/*", "/oauth/*", "/client-metadata.json", "/jwks.json"]
+run_worker_first = true
 
 [[d1_databases]]
 binding = "DB"
