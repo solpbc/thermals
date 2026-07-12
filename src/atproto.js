@@ -66,9 +66,16 @@ export async function resolveDids(dids, env) {
   }
 }
 
+// The content CID of an atproto blob ref (the `ref.$link`). Content-addressed,
+// so it doubles as a cache version: when a profile's avatar changes, its CID
+// changes, which is how downstream cache revalidation is triggered.
+export function blobCid(blobRef) {
+  return blobRef?.ref?.$link ?? blobRef?.ref?.toString?.() ?? null;
+}
+
 // Build a public blob URL for an avatar via the author's PDS getBlob.
 export function blobUrl(pds, did, blobRef) {
-  const cid = blobRef?.ref?.$link ?? blobRef?.ref?.toString?.() ?? null;
+  const cid = blobCid(blobRef);
   if (!pds || !cid) return null;
   return `${pds}/xrpc/com.atproto.sync.getBlob?did=${encodeURIComponent(did)}&cid=${encodeURIComponent(cid)}`;
 }

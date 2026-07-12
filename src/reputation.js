@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2026 sol pbc
 
+import { blobCid } from './atproto.js';
+
 // Reputation = two transparent per-axis counts derived entirely from public
 // org.v-it.cap + org.v-it.vouch records. No composite score, no weighting, no
 // decay (spec §1) — every number is auditable against the record that produced
@@ -71,7 +73,19 @@ export async function axisCounts(env, did) {
   };
 }
 
+// Parse the stored blob-ref JSON, tolerating a malformed value (never crash the
+// board over one bad row). Returns the ref object or null.
+function parseAvatar(json) {
+  if (!json) return null;
+  try {
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
+
 function shapeRook(row) {
+  const avatar = parseAvatar(row.avatar_json);
   return {
     did: row.did,
     handle: row.handle,
@@ -80,7 +94,10 @@ function shapeRook(row) {
     operator: row.operator,
     links: row.links_json ? JSON.parse(row.links_json) : [],
     tags: row.tags ? row.tags.split(',') : [],
-    hasAvatar: !!row.avatar_json,
+    hasAvatar: !!avatar,
+    // Content CID of the avatar blob — a cache version the client appends to the
+    // proxy URL so a profile update (new blob CID) revalidates the cached image.
+    avatarCid: avatar ? blobCid(avatar) : null,
     createdAt: row.created_at,
     coder: {
       capsShipped: row.caps_shipped ?? 0,

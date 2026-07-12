@@ -163,11 +163,21 @@ async function avatarProxy(searchParams, env) {
   if (!src) return new Response('no avatar', { status: 404 });
   const img = await fetch(src);
   if (!img.ok) return new Response('fetch failed', { status: 502 });
+  // Revalidation posture: the client versions the URL with the avatar's blob CID
+  // (`?v=`), which is content-addressed — so a profile update (new CID) yields a
+  // new URL and a guaranteed cache miss. A versioned URL is therefore immutable
+  // and cacheable hard; an unversioned hit keeps bounded staleness so a direct
+  // request still picks up an updated avatar within the window. A deleted/updated
+  // profile drops the row (or clears hasAvatar), so the stale URL is never
+  // re-requested — the index stays authoritative (indexes, never owns).
+  const cacheControl = searchParams.has('v')
+    ? 'public, max-age=86400, immutable'
+    : 'public, max-age=3600';
   return new Response(img.body, {
     status: 200,
     headers: {
       'Content-Type': img.headers.get('Content-Type') || 'image/jpeg',
-      'Cache-Control': 'public, max-age=3600',
+      'Cache-Control': cacheControl,
     },
   });
 }
