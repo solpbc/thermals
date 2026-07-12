@@ -40,8 +40,10 @@ Design SOT + renders + the founder design-gate record:
    `withSecurityHeaders`. My assets themselves make **zero** third-party
    requests (self-hosted fonts, mono monograms, no external scripts) — verified.
 
-2. **Avatars are wired but OFF** (`USE_AVATARS = false` in `app.js`), per the
-   founder call (monograms in v1, real avatars a fast-follow). Your
-   `/api/avatar?did=&kind=rook|bsky` proxy is already live and byte-clean, so
-   flipping the one constant to `true` is the entire change when we want faces —
-   `hasAvatar` on each rook already gates the request.
+2. **Avatars are ON** (`USE_AVATARS = true` in `app.js`) — the fast-follow to the
+   v1 monogram launch shipped (`extro/render-real-avatars`). A rook carrying a
+   `cloud.thermals.actor.profile` avatar shows it, streamed same-origin through
+   the `/api/avatar?did=&kind=rook` proxy (byte-clean holds). The URL is versioned
+   with the avatar blob CID (`&v=avatarCid`) so a profile update revalidates the
+   cache; a rook with no avatar (or a failed blob fetch) falls back to the
+   monogram in the same fixed-size box (no layout shift).

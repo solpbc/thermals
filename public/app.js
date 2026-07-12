@@ -16,10 +16,11 @@
 
   var FX = window.THERMALS_FIXTURES || null;
 
-  // Founder call (2026-07-06): monograms in v1, real avatars a fast-follow.
-  // VPE's /api/avatar proxy is already live, so flipping this to true is the
-  // whole change — the byte-clean bar holds either way (same-origin proxy).
-  var USE_AVATARS = false;
+  // Real avatars (fast-follow to the v1 monogram launch): a profile carrying a
+  // cloud.thermals.actor.profile avatar shows it, served same-origin through
+  // VPE's /api/avatar proxy (byte-clean — the browser never touches a PDS/CDN).
+  // Monogram is the fallback when a rook has no avatar or the blob fetch fails.
+  var USE_AVATARS = true;
 
   // ---------- helpers ----------
   function esc(s) {
@@ -42,12 +43,43 @@
     var src = String((name || handle || '·')).replace(/^@/, '').trim();
     return src.slice(0, 2).toLowerCase() || '·';
   }
+  function monogramSpan(r) {
+    return '<span class="avatar" aria-hidden="true">' + esc(monogram(r && r.displayName, r && r.handle)) + '</span>';
+  }
   function avatarHtml(r, kind, size) {
     if (USE_AVATARS && r && r.hasAvatar && r.did) {
+      var s = size || 44;
+      // Version the same-origin proxy URL with the avatar's blob CID so a profile
+      // update (new CID) revalidates the cached image. data-fallback carries the
+      // monogram so a failed blob fetch swaps to it (see wireAvatars) with no
+      // layout shift — the <img> and the <span> share the fixed-size .avatar box.
+      var v = r.avatarCid ? '&v=' + encodeURIComponent(r.avatarCid) : '';
       return '<img class="avatar" src="/api/avatar?did=' + encodeURIComponent(r.did) +
-        '&kind=' + (kind || 'rook') + '" alt="" width="' + (size || 44) + '" height="' + (size || 44) + '" loading="lazy">';
+        '&kind=' + (kind || 'rook') + v + '" alt="" width="' + s + '" height="' + s +
+        '" loading="lazy" data-fallback="' + esc(monogram(r.displayName, r.handle)) + '">';
     }
-    return '<span class="avatar" aria-hidden="true">' + esc(monogram(r && r.displayName, r && r.handle)) + '</span>';
+    return monogramSpan(r);
+  }
+  // Swap a broken avatar <img> for its monogram <span>. Same .avatar class →
+  // identical fixed-size box, so the fallback introduces no layout shift.
+  function swapToMonogram(img) {
+    var span = document.createElement('span');
+    span.className = 'avatar';
+    span.setAttribute('aria-hidden', 'true');
+    span.textContent = img.getAttribute('data-fallback') || '·';
+    if (img.parentNode) img.parentNode.replaceChild(span, img);
+  }
+  // Wire client-side monogram fallback for rendered avatar images. CSP forbids
+  // inline onerror handlers (script-src 'self'), so we attach listeners here.
+  // Also catches images that already errored before this ran (complete but
+  // naturalWidth 0), which happens with cached 404s.
+  function wireAvatars(root) {
+    (root || document).querySelectorAll('img.avatar[data-fallback]').forEach(function (img) {
+      if (img.__avatarWired) return;
+      img.__avatarWired = true;
+      img.addEventListener('error', function () { swapToMonogram(img); });
+      if (img.complete && img.naturalWidth === 0) swapToMonogram(img);
+    });
   }
   function displayHandle(r) {
     if (r && r.handle) return '@' + r.handle;
@@ -167,6 +199,7 @@
           '<span class="axis' + (lead === 'reviewer' ? ' lead' : '') + '"><span class="n">' + reviewerTotal(r) + '</span><span class="k">reviewer</span></span>' +
           '</span></a>';
       }).join('') + '</ol>';
+      wireAvatars(slot);
     }).catch(function () { var s = document.getElementById('slot'); if (s) s.innerHTML = errorState('the leaderboard'); });
   }
   function seg(k, label, cur) { return '<button data-sort="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(label) + '</button>'; }
@@ -290,6 +323,7 @@
       if (r.did) html += '<a class="atproto-link" href="https://pdsls.dev/at/' + esc(r.did) + '" rel="noopener">view this rook on atproto ↗</a>' +
         '<a class="atproto-link" href="/explorer/#/actor/' + esc(encodeURIComponent(r.did)) + '">inspect the raw records</a>';
       set(html);
+      wireAvatars(view);
     }).catch(function () { set('<a class="back" href="#/">← rooks</a>' + errorState('this rook')); });
   }
 
