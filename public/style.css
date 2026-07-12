@@ -144,6 +144,34 @@ main {
   font-size: 1rem;
   max-width: 42rem;
 }
+.lede-pointer {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-faint);
+}
+.lede-pointer a { color: var(--ink-soft); }
+.lede-pointer a:hover { color: var(--ink); }
+
+/* ---------- about ---------- */
+.about-body p {
+  margin: 0 0 1.1rem;
+  color: var(--ink-soft);
+  max-width: 42rem;
+}
+.about-body strong { color: var(--ink); }
+.about-body code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--wash-ink);
+  padding: 0.05em 0.35em;
+  border-radius: 3px;
+}
+.about-body .about-foot {
+  margin-top: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+}
 
 /* sort control (segmented, mono) */
 .controls {
