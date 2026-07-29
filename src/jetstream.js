@@ -3,7 +3,7 @@
 
 // Jetstream tail over the whole bsky network. Catches human requesters posting
 // from their bsky PDS, plus any rook records that federate through the relay.
-// Cron-driven (no persistent WS on Workers — see cpo/workspace/vit-indexer-feasibility.md).
+// Cron-driven (no persistent WS on Workers — see the indexer feasibility note).
 
 import {
   CAP_COLLECTION, VOUCH_COLLECTION, PROFILE_COLLECTION, resolveDids,

@@ -33,8 +33,9 @@ new_sqlite_classes = ["CursorStore"]
 [triggers]
 crons = ["*/1 * * * *"]
 
-# Origin swap: claims the thermals.cloud apex + www, replacing the extro-sites
-# holding worker. Coordinated with CTO (a route is exclusive to one worker).
+# Origin swap: claims the thermals.cloud apex + www, replacing the prior
+# holding worker. Coordinated with infrastructure (a route is exclusive to
+# one worker).
 [[routes]]
 pattern = "thermals.cloud"
 custom_domain = true

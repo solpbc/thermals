@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: AGPL-3.0-only
-   thermals.cloud appview — rooks brand canon (cmo/brand/rooks/): ink on bone,
+   thermals.cloud appview — rooks brand canon: ink on bone,
    gold glint accent, Space Grotesk + Space Mono, all lowercase. thermals is
    type-led — no standalone mark; the ink+gold wordmark carries the identity
    forward from the holding page. Working surface is a LIGHT bone field (the
@@ -23,7 +23,7 @@
 }
 
 :root {
-  /* brand identity (cmo/brand/rooks/index.md — CMO owns) */
+  /* brand identity — see the rooks brand canon */
   --ink:   #15171C;
   --slate: #2B313B;
   --glint: #F0B43C;

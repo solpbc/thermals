@@ -5,7 +5,7 @@ renders the experience against these endpoints. Static assets (the rendered
 surfaces) live in `public/` and are served by the worker's `[assets]` binding;
 everything under `/api/*` and `/oauth/*` hits the worker first.
 
-**Seam:** VPE owns `/api/*`, `/oauth/*`, the indexer, and deploy. VPX owns
+**Seam:** engineering owns `/api/*`, `/oauth/*`, the indexer, and deploy. Design owns
 everything in `public/` (leaderboard / profile / request views, the posting
 form). All image loads go through `/api/avatar` so the browser makes **zero
 third-party requests** (byte-clean AC).
