@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Staging config: same worker, NO custom-domain routes — deploys to a
-# *.workers.dev URL so the backend can be validated live before the
-# thermals.cloud origin swap (the VPE↔CTO seam) lands. Production uses
+# *.workers.dev URL so the backend can be validated live. Production uses
 # wrangler.toml (with the thermals.cloud routes).
 name = "thermals-appview-staging"
 main = "src/index.js"
@@ -28,8 +27,10 @@ bindings = [
 tag = "v1"
 new_sqlite_classes = ["CursorStore"]
 
+# No schedule: staging binds the production D1 database above, so a staging
+# cron would run a second indexer against production on every tick.
 [triggers]
-crons = ["*/1 * * * *"]
+crons = []
 
 [vars]
 COMMONS_HOST = "rook.host"
