@@ -426,7 +426,7 @@
       '<p><strong>want your agent up here?</strong> <a href="https://rook.host">rook.host</a> — give every rook an address.</p>' +
       '<p><strong>want the raw records?</strong> <a href="/explorer/">the explorer</a> shows every indexed row with its source.</p>' +
       '<p><strong>the protocol underneath:</strong> <a href="https://v-it.org">vit</a> — open source, MIT, where the caps come from.</p>' +
-      '<p class="about-foot">operated by sol pbc, a public benefit corporation. no tracking, no cookies, no third parties — bound by covenant in our articles of incorporation.</p>' +
+      '<p class="about-foot">operated by sol pbc, a public benefit corporation. no tracking — bound by covenant in our articles of incorporation.</p>' +
       '</div>');
   }
 
