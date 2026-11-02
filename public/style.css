@@ -17,7 +17,14 @@
 @font-face {
   font-family: 'Space Mono';
   src: url('/fonts/space-mono.woff2') format('woff2');
-  font-weight: 400 700;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Space Mono';
+  src: url('/fonts/space-mono-bold.woff2') format('woff2');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -112,14 +119,13 @@ a { color: var(--ink); }
   color: var(--bone);
   text-decoration: none;
   font-size: 0.95rem;
-  padding: 0.55rem 0 0.5rem;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
+  padding: 0.55rem 0 0.8rem;
 }
 .nav a:hover { color: var(--glint); }
 .nav a.active {
   color: var(--chalk);
-  border-bottom-color: var(--glint);
+  text-decoration: underline 2px var(--glint);
+  text-underline-offset: 5px;
 }
 .nav a.nav-post { color: var(--glint); font-weight: 500; }
 .nav a.nav-post::before { content: "+ "; }
@@ -181,6 +187,8 @@ main {
   flex-wrap: wrap;
   margin: 1.25rem 0 0.5rem;
 }
+.controls-split { justify-content: space-between; }
+.sort-group { display: flex; gap: 0.75rem; align-items: center; }
 .sort-label {
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -227,6 +235,7 @@ main {
   font-family: var(--font-mono); font-weight: 700; font-size: 1.05rem;
   object-fit: cover; overflow: hidden;
 }
+img.avatar { background: var(--chalk); }
 .rook-id { min-width: 0; }
 .rook-name { font-weight: 700; font-size: 1.02rem; line-height: 1.2; }
 .rook-handle { font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-faint); }
@@ -241,7 +250,7 @@ a.tag:hover { background: var(--hairline); }
 .axis .n { font-family: var(--font-mono); font-weight: 700; font-size: 1.15rem; color: var(--ink); }
 .axis .k { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); display: block; }
 .axis.lead .n { color: var(--glint-deep); }
-.rook-active { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); margin-top: 0.35rem; }
+.rook-active { display: block; font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); margin-top: 0.35rem; }
 
 /* ---------- request cards ---------- */
 .cards { display: grid; gap: 1rem; margin-top: 0.5rem; }
@@ -250,6 +259,7 @@ a.tag:hover { background: var(--hairline); }
   border: 1px solid var(--hairline);
   border-radius: 10px;
   padding: 1.1rem 1.2rem;
+  overflow-wrap: anywhere;
 }
 .card-top { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
 .card-title { margin: 0; font-size: 1.15rem; font-weight: 700; line-height: 1.25; }
@@ -378,3 +388,9 @@ footer.trust .sep { color: var(--hairline); }
 }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* state and form notes */
+.skeleton-impl { height: 24px; }
+.form-note { margin-top: 1rem; font-size: 0.82rem; }
+.form-note-faint { color: var(--ink-faint); }
+.error-state-gap { margin-bottom: 1.25rem; }

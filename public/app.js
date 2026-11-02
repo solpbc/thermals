@@ -221,7 +221,7 @@
       ' · ' + esc(timeAgo(rq.created_at)) + '</p>' +
       (rq.description ? '<p class="card-desc">' + esc(rq.description) + '</p>' : '') + implSlot + '</article>';
   }
-  function skeletonImpl(n) { var s = ''; for (var i = 0; i < Math.min(n, 3); i++) s += '<div class="skeleton-row" style="height:24px"></div>'; return s; }
+  function skeletonImpl(n) { var s = ''; for (var i = 0; i < Math.min(n, 3); i++) s += '<div class="skeleton-row skeleton-impl"></div>'; return s; }
   function implRow(im) {
     var link = im.fork_url ? '<a href="' + esc(im.fork_url) + '" rel="noopener">fork + branch ↗</a>' : '';
     return '<div class="impl">' + kindBadge(im.kind) +
@@ -242,7 +242,7 @@
   function renderRequests(route) {
     setNav('requests');
     set('<div class="view-head"><h1>open requests</h1><p class="lede">anyone can ask for work on an open source project. a rook picks it up, ships a cap, clips on the code. reputation follows.</p></div>' +
-      '<div class="controls" style="justify-content:space-between"><div style="display:flex;gap:.75rem;align-items:center">' +
+      '<div class="controls controls-split"><div class="sort-group">' +
       '<span class="sort-label">sort</span><div class="segmented" role="group" aria-label="sort">' +
       seg('recent', 'recent', route.sort) + seg('want-vouches', 'most wanted', route.sort) +
       '</div></div><a class="btn btn-primary" href="#/post">post a request</a></div>' +
@@ -340,7 +340,7 @@
           '<form class="signin-row" id="signin-form">' +
           '<input type="text" id="handle" name="handle" placeholder="you.bsky.social" autocomplete="username" aria-label="your handle" required>' +
           '<button class="btn btn-primary" type="submit">continue</button></form>' +
-          '<p style="margin-top:1rem;font-size:.82rem">reading the board never needs an account. sign-in is only for writing.</p></div>';
+          '<p class="form-note">reading the board never needs an account. sign-in is only for writing.</p></div>';
         var f = document.getElementById('signin-form');
         if (f) f.addEventListener('submit', onSignin);
         return;
@@ -357,7 +357,7 @@
         '<textarea id="desc" name="desc" placeholder="the settings page ignores the OS theme…"></textarea></div>' +
         '<div class="form-actions"><button class="btn btn-primary" type="submit">post to my repo</button>' +
         '<button class="btn btn-ghost" type="button" id="signout">sign out</button></div>' +
-        '<p style="margin-top:1rem;font-size:.82rem;color:var(--ink-faint)">signed in as @' + esc(s.handle) + '. posts to your PDS under your DID; shows here as the indexer catches it.</p></form>';
+        '<p class="form-note form-note-faint">signed in as @' + esc(s.handle) + '. posts to your PDS under your DID; shows here as the indexer catches it.</p></form>';
       var pf = document.getElementById('post-form');
       if (pf) pf.addEventListener('submit', onPostSubmit);
       var so = document.getElementById('signout');
@@ -439,7 +439,7 @@
     history.replaceState(null, '', location.pathname + location.hash);
     if (a === 'ok') return null; // signed in — the post form renders below
     var msg = { denied: 'sign-in was cancelled.', expired: 'that sign-in link expired — try again.', error: 'sign-in didn\'t complete. try again.' }[a] || 'sign-in didn\'t complete.';
-    return '<div class="error-state" style="margin-bottom:1.25rem"><h2>not signed in</h2><p>' + esc(msg) + '</p></div>';
+    return '<div class="error-state error-state-gap"><h2>not signed in</h2><p>' + esc(msg) + '</p></div>';
   }
 
   function route() {
